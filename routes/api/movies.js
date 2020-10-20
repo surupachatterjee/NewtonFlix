@@ -6,9 +6,9 @@ const axios = require('axios');
 
 
 // load config details
-const OMDBURI = require('../../config/keys_dev').OMDBURI;
-const OMDBAPIKEY = require('../../config/keys_dev').OMDBAPIKEY;
-const IMDBURI = require('../../config/keys_dev').IMDBURI;
+const OMDBURI = require('../../config/keys').OMDBURI;
+const OMDBAPIKEY = require('../../config/keys').OMDBAPIKEY;
+const IMDBURI = require('../../config/keys').IMDBURI;
 
 // @route   GET api/movies
 // @desc    Test route
