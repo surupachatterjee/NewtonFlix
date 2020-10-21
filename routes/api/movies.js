@@ -21,20 +21,15 @@ router.get('/', (req, res) => {
 // @desc    Get by movie name
 // @access  Public
 router.get('/movie/:movieName', ({ params: { movieName } }, res) => {
-  console.log(movieName);
   axios.get(`${OMDBURI}/?apikey=${OMDBAPIKEY}&type=movie&s=${movieName}`)
   .then(resp => {
-    // console.log(resp);
-    // res.send(resp.data);
     let allmovieDetails = [];
     const moviesFound = resp.data;
-    //console.log(moviesFound);
     if (moviesFound.Response === 'True') {
       moviesFound.Search.map(movieObj => {
         movieObj = {...movieObj, imDBLink: `${IMDBURI}/title/${movieObj.imdbID}`};
         allmovieDetails.push(movieObj);
       }) 
-      //res.send(allmovieDetails);
       const totalResults=Number(moviesFound.totalResults);
       const totalPages=Math.ceil(totalResults/allmovieDetails.length);
       const result = {
@@ -58,14 +53,10 @@ router.get('/movie/:movieName', ({ params: { movieName } }, res) => {
 // @desc    Get by movie name and page number
 // @access  Public
 router.get('/movie/:movieName/:pageNum', ({ params: { movieName,pageNum } }, res) => {
-  console.log(movieName,pageNum);
   axios.get(`${OMDBURI}/?apikey=${OMDBAPIKEY}&type=movie&s=${movieName}&page=${pageNum}`)
   .then(resp => {
-    // console.log(resp);
-    // res.send(resp.data);
     let allmovieDetails = [];
     const moviesFound = resp.data;
-    //console.log(moviesFound);
     if (moviesFound.Response === 'True') {
       moviesFound.Search.map(movieObj => {
         movieObj = {...movieObj, imDBLink: `${IMDBURI}/title/${movieObj.imdbID}`};

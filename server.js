@@ -36,3 +36,4 @@ app.use('/api/movies', movies );
 
 // start listening on the port
 app.listen(PORT, () => console.log(`Server started on Port ${PORT}`));
+
