@@ -28,13 +28,22 @@ router.get('/movie/:movieName', ({ params: { movieName } }, res) => {
     // res.send(resp.data);
     let allmovieDetails = [];
     const moviesFound = resp.data;
-    console.log(moviesFound);
+    //console.log(moviesFound);
     if (moviesFound.Response === 'True') {
       moviesFound.Search.map(movieObj => {
         movieObj = {...movieObj, imDBLink: `${IMDBURI}/title/${movieObj.imdbID}`};
         allmovieDetails.push(movieObj);
       }) 
-      res.send(allmovieDetails);
+      //res.send(allmovieDetails);
+      const totalResults=Number(moviesFound.totalResults);
+      const totalPages=Math.ceil(totalResults/allmovieDetails.length);
+      const result = {
+        currentPage:1,
+        totalPages,
+        totalResults,
+        movies:allmovieDetails
+      }
+      res.send(result);
   } else {
     res.statusCode = 400;
     res.send(moviesFound.Error);
@@ -45,5 +54,40 @@ router.get('/movie/:movieName', ({ params: { movieName } }, res) => {
   });
   });
 
+// @route   GET api/movies/movie/:movieName/:pageNum
+// @desc    Get by movie name and page number
+// @access  Public
+router.get('/movie/:movieName/:pageNum', ({ params: { movieName,pageNum } }, res) => {
+  console.log(movieName,pageNum);
+  axios.get(`${OMDBURI}/?apikey=${OMDBAPIKEY}&type=movie&s=${movieName}&page=${pageNum}`)
+  .then(resp => {
+    // console.log(resp);
+    // res.send(resp.data);
+    let allmovieDetails = [];
+    const moviesFound = resp.data;
+    //console.log(moviesFound);
+    if (moviesFound.Response === 'True') {
+      moviesFound.Search.map(movieObj => {
+        movieObj = {...movieObj, imDBLink: `${IMDBURI}/title/${movieObj.imdbID}`};
+        allmovieDetails.push(movieObj);
+      }) 
+      const totalResults=Number(moviesFound.totalResults);
+      const totalPages=Math.ceil(totalResults/allmovieDetails.length);
+      const result = {
+        currentPage:pageNum,
+        totalPages,
+        totalResults,
+        movies:allmovieDetails
+      }
+      res.send(result);
+  } else {
+    res.statusCode = 400;
+    res.send(moviesFound.Error);
+  }
+})
+  .catch(err => {
+    console.log(err);
+  });
+  });
 
 module.exports = router;
